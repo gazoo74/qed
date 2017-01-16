@@ -278,6 +278,10 @@ case ${action} in
 		;;
 
 	run)
+		# run a shell if command is left empty and interactive mode is set
+		if [ -z "$@" ] && [ -n "${interactive:-}" ]; then
+			set -- ${SHELL:-/bin/sh}
+		fi
 		docker_prepare
 		docker_exec "$@"
 		;;
