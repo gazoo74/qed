@@ -263,11 +263,6 @@ hash=$(echo ${project_dir} | sha1sum | cut -c 1-8)
 # skip all qed parameters
 shift "$((OPTIND-1))"
 
-# check distribution parameter
-if [ -z "${distribution}" ]; then
-	fatal "distribution is not set"
-fi
-
 # sanitize distribution name
 distribution_sanitized=$(echo ${distribution} | sed 's/:/-/g' | sed 's/\./-/g' | rev | cut -d/ -f1 | rev)
 
@@ -278,6 +273,11 @@ case ${action} in
 		;;
 
 	run)
+		# check distribution parameter
+		if [ -z "${distribution}" ]; then
+			fatal "distribution is not set"
+		fi
+
 		# run a shell if command is left empty and interactive mode is set
 		if [ -z "$@" ] && [ -n "${interactive:-}" ]; then
 			set -- ${SHELL:-/bin/sh}
