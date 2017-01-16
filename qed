@@ -64,8 +64,14 @@ list() {
 }
 
 remove() {
-	echo "removing containers"
-	# TODO
+	logme "removing containers"
+	docker_images "$@" | awk '{ print $1; }' | while read tag; do docker rmi ${tag} && logme "${tag} removed!"; done
+}
+
+# list docker images
+docker_images() {
+	# list docker images
+	docker images | grep -E "^qed-${hash}-${project}-${1:-*}"
 }
 
 # prepare docker image
@@ -269,7 +275,7 @@ distribution_sanitized=$(echo ${distribution} | sed 's/:/-/g' | sed 's/\./-/g' |
 # check action
 case ${action} in
 	list|remove)
-		${action}
+		${action} "${distribution_sanitized:-*}"
 		;;
 
 	run)
