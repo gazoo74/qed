@@ -54,13 +54,14 @@ usage() {
 	echo "	-p	force pull of docker base image from registry"
 	echo "	-f	force re-creation of the docker container"
 	echo "	-w	enable moonwalk mode (usefull when running qed commands in subdirectories)"
+	echo "	-l	list all containers associated to current working directory"
 	echo "	-r	remove all containers associated to current working directory"
 	echo "	-q	quiet mode (do not show qed log messages)"
 }
 
 list() {
-	echo "listing containers"
-	# TODO
+	logme "listing containers"
+	docker_images "$@"
 }
 
 remove() {
