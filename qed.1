@@ -1,0 +1,200 @@
+.\" This file is part of the qed project (https://github.com/vivien/qed).
+.\"
+.\"  Copyright (c) 2017  Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+.\"  Copyright (c) 2017  Lionel Nicolas <lionel.nicolas@nividic.org>
+.\"
+.\" %%%LICENSE_START(GPLv2+_DOC_FULL)
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, version 3.
+.\"
+.\" This program is distributed in the hope that it will be useful, but
+.\" WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+.\" General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program. If not, see <http://www.gnu.org/licenses/>.
+.\" %%%LICENSE_END
+.\"
+.
+.TH "QED" "1" "2017-01-16" "Q.E.D." "Q.E.D. Manual"
+.
+.SH NAME
+qed - Run a command in a per-project container
+.
+.SH SYNOPSIS
+.B qed
+.RI [OPTIONS]\ [COMMAND]
+.
+.SH DESCRIPTION
+In its simpliest form,
+.B qed(1)
+executes the given command in a
+.BR docker(1)
+associated to the current working directory (or the first parent directory),
+using the current user ownership.
+.
+.P
+If no command is given to the command line,
+.B qed(1)
+opens an interactive shell if the interactive flag
+.I -i
+is set.
+.
+.P
+If container does not exist yet,
+.B qed(1)
+creates a new one based on options inherited from the global config file in a
+$XDG_CONFIG_HOME directory, the config file in the current directory, and
+command line arguments.
+.
+.P
+You can think about
+.B qed(1)
+as a tool smarter than the following
+.B docker
+command:
+.
+.P
+.in +4n
+.nf
+$ docker run -v $PWD:$PWD -w $PWD -i -t ubuntu /bin/bash
+.fi
+.in
+.
+.P
+Dumping the version of the default distribution would be as trivial as:
+.
+.P
+.in +4n
+.nf
+$ qed cat /etc/os-release | grep PRETTY_NAME
+PRETTY_NAME="Ubuntu 16.04.1 LTS"
+.fi
+.in
+.
+.P
+.B qed(1)
+can also list or remove one or all associated containers.
+.
+.SH OPTIONS
+.
+.TP
+.B \-h
+show this help message
+.
+.TP
+.B \-c
+local configuration directory (default to autodetect)
+.
+.TP
+.B \-d
+target distribution image (a custom one can be used, like
+'my.registry/builder/ubuntu:10.04')
+.
+.TP
+.B \-i
+enter interactive mode
+.
+.TP
+.B \-b
+force re-build of a local docker base image
+.
+.TP
+.B \-p
+force pull of docker base image from registry
+.
+.TP
+.B \-f
+force re-creation of the docker container
+.
+.TP
+.B \-w
+enable moonwalk mode (usefull when running qed commands in subdirectories)
+.
+.TP
+.B \-r
+remove all containers associated to current working directory
+.
+.TP
+.B \-q
+quiet mode (do not show qed log messages)
+.
+.SH EXAMPLES
+Some examples of
+.B qed(1)
+use case:
+.
+.P
+Run an interactive shell inside the docker image
+.
+.P
+.in +4n
+.nf
+$ qed -i
+.fi
+.in
+.
+.P
+Run make inside the docker image
+.
+.P
+.in +4n
+.nf
+$ qed make
+.fi
+.in
+.
+.P
+Run an interactive make menuconfig inside the docker image
+.
+.P
+.in +4n
+.nf
+$ qed -i make menuconfig
+.fi
+.in
+.
+.P
+Rebuild the docker image if the
+.BR Dockerfile(5)
+has been updated
+.
+.P
+.in +4n
+.nf
+$ qed -b
+.fi
+.in
+.
+.SH BUGS
+Report bugs at
+.RB < https://github.com/vivien/qed/issues >
+.
+.SH AUTHOR
+Written by Lionel Nicolas
+.RB < lionel.nicolas@nividic.org >
+and Vivien Didelot
+.RB < vivien.didelot@savoirfairelinux.com >
+.
+.SH COPYRIGHT
+Copyright (c) 2016-2017 Lionel Nicolas and Vivien Didelot
+.
+.P
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, version 3.
+.
+.SH SEE ALSO
+.BR docker(1),
+.BR Dockerfile(5)
+.
+.SH COLOPHON
+This page is part of
+.B Q.E.D.
+project.
+.
+.P
+.B Q.E.D.
+stands for Quod Erat Dockerandum.
